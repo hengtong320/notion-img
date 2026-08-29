@@ -1,0 +1,46 @@
+Each(a=>{
+      const b=document.createElement("button");
+      b.textContent=a.label;
+      if(a.primary)b.classList.add("primary");
+      b.addEventListener("click",a.onClick);
+      modalActions.appendChild(b);
+    });
+    modal.classList.remove("hidden");
+  }
+  function hidePanel(){ modal.classList.add("hidden"); }
+  function showFail(){
+    state.busy=true;
+    showPanel({
+      seal:"困",title:"封印失衡",text:"三次误判耗尽心力，可重新布阵继续挑战。",
+      stats:[["已解",96-remainingCount()],["误判",state.mistakes]],
+      actions:[
+        {label:"重新开始",primary:true,onClick:()=>{hidePanel();resetGame();}},
+        {label:"观察解法",onClick:()=>{hidePanel();state.lives=1;updateHud();hint();state.busy=false;}}
+      ]
+    });
+  }
+  function complete(){
+    if(!state.centerReady||state.busy) return;
+    state.busy=true; sound("win"); vibrate([30,30,60,40,90]);
+    centerGroup.animate([{transform:"scale(1)"},{transform:"scale(1.12)"},{transform:"scale(1)"}],{duration:900,easing:"ease-in-out"});
+    const sec=Math.max(1,Math.round((performance.now()-state.startedAt)/1000));
+    setTimeout(()=>showPanel({
+      seal:"归",title:"四象归真",text:"青龙、白虎、朱雀、玄武四印合一。",
+      stats:[["用时",`${Math.floor(sec/60)}:${String(sec%60).padStart(2,"0")}`],["步数",state.moves],["误判",state.mistakes],["评价",state.mistakes===0?"完美":"完成"]],
+      actions:[{label:"再解一次",primary:true,onClick:()=>{hidePanel();resetGame();}}]
+    }),620);
+  }
+
+  function resetGame(){
+    buildRuntime(); renderFrames(); renderPieces(); renderHearts(); updateHud();
+    centerGroup.classList.remove("ready"); centerSealText.textContent="封";
+    state.busy=false; toast("四象封印重新布下");
+  }
+
+  function validate(){
+    let ok=true;
+    level.zones.forEach(z=>{
+      const active=new Map(z.pieces.map(p=>[p.id,p]));
+      for(const pid of z.solution){
+        const p=active.get(pid);
+        const fake={...z,pieces:[...active.values()].map(q=>({...q,active:true
