@@ -24,6 +24,7 @@ jobs:
       CREATOR_VERSION: 3.8.8
       CREATOR_ZIP: CocosCreator-v3.8.8-win-121518.zip
       CREATOR_URL: https://download.cocos.com/CocosCreator/v3.8.8/CocosCreator-v3.8.8-win-121518.zip
+      SOURCE_SHA256: ea809803bbe6d226e256858ead9c005985ad2bd2139164a518167facf6897d5d
 
     steps:
       - name: Checkout bootstrap branch
@@ -33,8 +34,14 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
+          $joined = (Get-ChildItem -Path bootstrap/chunks -Filter '*.b64' | Sort-Object Name | ForEach-Object { Get-Content $_.FullName -Raw }) -join ''
+          $joined = $joined -replace '\s', ''
+          $sourceZip = Join-Path $env:RUNNER_TEMP 'four-symbols-project.zip'
+          [IO.File]::WriteAllBytes($sourceZip, [Convert]::FromBase64String($joined))
+          $hash = (Get-FileHash $sourceZip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($hash -ne $env:SOURCE_SHA256) { throw "Source archive checksum mismatch: $hash" }
           if (Test-Path cocos-project) { Remove-Item cocos-project -Recurse -Force }
-          Expand-Archive -Path bootstrap/project-source.zip -DestinationPath cocos-project -Force
+          Expand-Archive -Path $sourceZip -DestinationPath cocos-project -Force
           python cocos-project/tools/generate-audio.py
           node cocos-project/tools/verify-levels.mjs
           New-Item -ItemType Directory -Force -Path downloads | Out-Null
