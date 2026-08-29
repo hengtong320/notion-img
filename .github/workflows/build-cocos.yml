@@ -1,0 +1,146 @@
+name: Build Cocos Creator Four Symbols
+
+on:
+  push:
+    branches: [sixiang-cocos-creator]
+    paths-ignore:
+      - 'cocos-project/**'
+      - 'downloads/**'
+      - 'web-build/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: four-symbols-cocos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prepare-and-build:
+    runs-on: windows-latest
+    timeout-minutes: 70
+    env:
+      CREATOR_VERSION: 3.8.8
+      CREATOR_ZIP: CocosCreator-v3.8.8-win-121518.zip
+      CREATOR_URL: https://download.cocos.com/CocosCreator/v3.8.8/CocosCreator-v3.8.8-win-121518.zip
+
+    steps:
+      - name: Checkout bootstrap branch
+        uses: actions/checkout@v4
+
+      - name: Reconstruct complete Cocos project
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (Test-Path cocos-project) { Remove-Item cocos-project -Recurse -Force }
+          Expand-Archive -Path bootstrap/project-source.zip -DestinationPath cocos-project -Force
+          python cocos-project/tools/generate-audio.py
+          node cocos-project/tools/verify-levels.mjs
+          New-Item -ItemType Directory -Force -Path downloads | Out-Null
+          if (Test-Path downloads/FourSymbols-CocosCreator-3.8.8.zip) {
+            Remove-Item downloads/FourSymbols-CocosCreator-3.8.8.zip -Force
+          }
+          Compress-Archive -Path cocos-project -DestinationPath downloads/FourSymbols-CocosCreator-3.8.8.zip -CompressionLevel Optimal
+
+      - name: Publish downloadable source immediately
+        shell: pwsh
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add cocos-project downloads
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m 'build: publish downloadable Cocos source [skip ci]'
+            git push origin HEAD:sixiang-cocos-creator
+          }
+
+      - name: Upload Cocos source artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: four-symbols-cocos-creator-source
+          path: downloads/FourSymbols-CocosCreator-3.8.8.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Cache Cocos Creator
+        id: cache-creator
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}\cocos-creator-3.8.8
+          key: cocos-creator-win-3.8.8-121518
+
+      - name: Download and extract Cocos Creator 3.8.8
+        if: steps.cache-creator.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'cocos-creator-3.8.8'
+          $zip = Join-Path $env:RUNNER_TEMP $env:CREATOR_ZIP
+          New-Item -ItemType Directory -Force -Path $root | Out-Null
+          Invoke-WebRequest -Uri $env:CREATOR_URL -OutFile $zip -UseBasicParsing
+          Expand-Archive -Path $zip -DestinationPath $root -Force
+
+      - name: Build web-mobile in Cocos Creator
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'cocos-creator-3.8.8'
+          $creator = Get-ChildItem -Path $root -Filter CocosCreator.exe -Recurse | Select-Object -First 1
+          if (-not $creator) { throw 'CocosCreator.exe not found after extraction.' }
+          $project = (Resolve-Path 'cocos-project').Path
+          $stdout = Join-Path $env:GITHUB_WORKSPACE 'cocos-build.stdout.log'
+          $stderr = Join-Path $env:GITHUB_WORKSPACE 'cocos-build.stderr.log'
+          $buildArgs = 'platform=web-mobile;debug=false;md5Cache=false;buildPath=project://build/web-mobile;startScene=09dc4332-638e-4828-b232-b4d2a0363ad2'
+          Write-Host "Creator: $($creator.FullName)"
+          Write-Host "Project: $project"
+          $process = Start-Process -FilePath $creator.FullName `
+            -ArgumentList @('--project', $project, '--build', $buildArgs) `
+            -Wait -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+          Get-Content $stdout -ErrorAction SilentlyContinue
+          Get-Content $stderr -ErrorAction SilentlyContinue
+          if ($process.ExitCode -ne 0 -and $process.ExitCode -ne 36) {
+            throw "Cocos build failed with exit code $($process.ExitCode)"
+          }
+
+      - name: Locate and stage web build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $index = Get-ChildItem -Path cocos-project/build -Filter index.html -Recurse | Select-Object -First 1
+          if (-not $index) { throw 'Built index.html was not found.' }
+          if (Test-Path web-build) { Remove-Item web-build -Recurse -Force }
+          New-Item -ItemType Directory web-build | Out-Null
+          Copy-Item -Path (Join-Path $index.Directory.FullName '*') -Destination web-build -Recurse -Force
+          Write-Host "Staged build from $($index.Directory.FullName)"
+
+      - name: Upload runnable web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: four-symbols-web-mobile
+          path: web-build
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish runnable web build
+        shell: pwsh
+        run: |
+          git add web-build
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m 'build: publish Cocos web-mobile [skip ci]'
+            git push origin HEAD:sixiang-cocos-creator
+          }
+
+      - name: Upload diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cocos-build-diagnostics
+          path: |
+            cocos-build.stdout.log
+            cocos-build.stderr.log
+            cocos-project/build/**/*.log
+            cocos-project/temp/**/*.log
+          if-no-files-found: ignore
+          retention-days: 14
