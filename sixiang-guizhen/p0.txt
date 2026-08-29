@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#030303">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>四象归真 · 在线精修版 V2</title>
+<style>
+:root{
+  --gold:#e5b749;--gold-light:#ffe69a;--gold-dark:#6b430e;
+  --red:#d53727;--red-dark:#63100b;--cream:#f4d787;--black:#030303;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}
+body{display:grid;place-items:center;font-family:"STKaiti","KaiTi","Kaiti SC","Songti SC",serif;user-select:none}
+button{font:inherit}
+#app{
+  position:relative;
+  width:min(100vw,calc(100vh * 941 / 1672));
+  height:min(100vh,calc(100vw * 1672 / 941));
+  max-width:941px;max-height:1672px;background:#030303;overflow:hidden;
+  touch-action:none;box-shadow:0 0 80px rgba(0,0,0,.95)
+}
+#gameSvg{display:block;width:100%;height:100%;touch-action:none}
+.level-no{fill:#edc25f;font-size:51px;font-weight:700;letter-spacing:3px}
+.level-title{fill:#dba746;font-size:36px;font-weight:700;letter-spacing:8px}
+.progress-text{fill:#b7893b;font-size:20px;font-family:"PingFang SC","Noto Sans SC",sans-serif;letter-spacing:2px}
+.heart-text{fill:#ee382c;stroke:#ff8e68;stroke-width:.7;font:700 54px/1 sans-serif;filter:url(#redGlow)}
+.heart-text.empty{opacity:.16;filter:none}
+.zone-frame{fill:none;stroke:#9f681c;stroke-width:2;opacity:.8}
+.zone-frame-inner{fill:none;stroke:#4d310d;stroke-width:1}
+.zone-name-plaque{fill:#74140d;stroke:#d2a13c;stroke-width:2;filter:url(#redGlow)}
+.zone-name-text{fill:#f3cc66;font-size:22px;font-weight:700;letter-spacing:4px}
+.zone-progress{fill:#a77a31;font-size:16px;font-family:"PingFang SC","Noto Sans SC",sans-serif}
+.ghost-path{fill:none;stroke:#c48d2e;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;}
+.piece{cursor:pointer;outline:none;transform-box:fill-box;transform-origin:center}
+.piece-shadow{fill:none;stroke:#1f1306;stroke-width:9.5;stroke-linecap:round;stroke-linejoin:round}
+.piece-line{fill:none;stroke:url(#goldStroke);stroke-width:4.7;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrowGold);filter:url(#goldGlow)}
+.piece-hit{fill:none;stroke:transparent;stroke-width:27;stroke-linecap:round;stroke-linejoin:round;pointer-events:stroke}
+.piece.hint .piece-line{stroke:#fff4af;marker-end:url(#arrowHint);animation:hintPulse .5s ease-in-out infinite alternate}
+.piece.blocked{animation:shake .32s ease}
+.piece.blocked .piece-line{fill:none;stroke:url(#goldStroke);stroke-width:4.7;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrowGold);filter:url(#goldGlow)}
+.piece.blocker .piece-line{fill:none;stroke:url(#goldStroke);stroke-width:4.7;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrowGold);filter:url(#goldGlow)}
+.piece.assist-ready .piece-line{fill:none;stroke:url(#goldStroke);stroke-width:4.7;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrowGold);filter:url(#goldGlow)}
+.piece.removing{pointer-events:none}
+.medallion-outer{fill:#030303;stroke:#d6a23b;stroke-width:4}
+.medallion-inner{fill:#030303;stroke:#704811;stroke-width:2}
+.medallion-img{pointer-events:none}
+.medallion-glow{opacity:0;fill:none;stroke:#f5c95e;stroke-width:7;filter:url(#goldGlow)}
+.medallion.done .medallion-glow{opacity:1;animation:medallionPulse .9s ease-in-out infinite alternate}
+.medallion.done .medallion-img{filter:url(#goldGlow)}
+.zone-seal{fill:#76130c;stroke:#d8a03a;stroke-width:2.5}
+.zone-seal-text{fill:#f5ce68;font-size:20px;font-weight:700}
+.zone-seal.done{fill:#d5a238;filter:url(#goldGlow)}
+.center-group{cursor:default;outline:none}
+.center-halo{fill:none;stroke:#7b4b13;stroke-width:3;opacity:.45}
+.center-ring{fill:#030303;stroke:url(#goldStroke);stroke-width:5}
+.center-seal{fill:#d23b28;font-size:41px;font-weight:800;filter:url(#redGlow)}
+.center-dot{fill:#5f0f0b;stroke:#c89131;stroke-width:2}
+.center-dot.done{fill:#e5b34b;filter:url(#goldGlow)}
+.center-group.ready{cursor:pointer;animation:centerPulse .85s ease-in-out infinite alternate}
+.center-group.ready .center-seal{fill:#f0c85c}
+.combo-text{fill:#ffe59a;font-size:36px;font-weight:700;filter:url(#goldGlow)}
+
+.top-action-circle{fill:#070604;stroke:url(#goldStroke);stroke-width:3}
+.top-action-icon{fill:#efc860;font-size:27px;font-weight:700}
+.footer-divider{stroke:#94601b;stroke-width:2}
+.footer-circle{fill:#080705;stroke:url(#goldStroke);stroke-width:4}
+.footer-icon{fill:none;stroke:#e8bc57;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+.footer-label{fill:#e5b854;font-size:30px;font-weight:700}
+
+.count-dot{fill:#a91d13;stroke:#e4ac3d;stroke-width:2}
+.count-num{fill:#ffe4a0;font:700 20px/1 sans-serif}
+.footer-hit,.header-hit{cursor:pointer;outline:none}
+.footer-hit:active,.header-hit:active{transform-box:fill-box;transform-origin:center;transform:scale(.96)}
+#toast{
+  position:absolute;left:50%;bottom:18.2%;transform:translate(-50%,16px);
+  max-width:82%;padding:10px 20px;border:1px solid #ba8126;border-radius:999px;
+  color:#f7dda0;background:rgba(5,5,4,.94);font:600 clamp(13px,2.3vw,22px)/1.35 "PingFang SC","Noto Sans SC",sans-serif;
+  opacity:0;pointer-events:none;transition:.2s;white-space:nowrap;z-index:8;
+  box-shadow:0 10px 40px rgba(0,0,0,.7)
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.overlay{
+  position:absolute;inset:0;display:grid;place-items:center;padding:7%;z-index:20;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(4px)
+}
+.overlay.hidden{display:none}
+.panel-card{
+  width:100%;max-width:690px;min-height:460px;padding:36px 42px 40px;text-align:center;
+  color:#f2d48a;border:
