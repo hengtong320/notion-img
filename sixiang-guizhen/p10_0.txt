@@ -1,0 +1,47 @@
+e.w/2;
+      [...z.name].forEach((ch,j)=>e("text",{x:tx,y:plaque.y+38+j*35,class:"zone-name-text","text-anchor":"middle",text:ch},sealLayer));
+
+      const cx=x+w/2, cy=y+h/2;
+      const clipId=`medClip${i}`;
+      const defs=svg.querySelector("defs");
+      const cp=e("clipPath",{id:clipId},defs);
+      e("circle",{cx,cy,r:78},cp);
+      const mg=e("g",{class:"medallion"},medallionLayer);
+      e("circle",{cx,cy,r:92,class:"medallion-glow"},mg);
+      e("circle",{cx,cy,r:88,class:"medallion-outer"},mg);
+      e("circle",{cx,cy,r:80,class:"medallion-inner"},mg);
+      const img=e("image",{href:(window.ASSET_MAP?.[z.asset] || `assets/${z.asset}.png`),x:cx-78,y:cy-78,width:156,height:156,class:"medallion-img","clip-path":`url(#${clipId})`},mg);
+      z.medallion=mg;
+      const sideY = i<2 ? y+h+19 : y+h+19;
+      z.progress=e("text",{x:cx,y:sideY,class:"zone-progress","text-anchor":"middle",text:`${z.name} · 24`},medallionLayer);
+      const s=e("circle",{cx:i%2?588.5:352.5,cy:i<2?811:811,r:10,class:"center-dot"},centerDots);
+      z.seal=s;
+    });
+  }
+
+  function renderPieces(){
+    pieceLayer.innerHTML=""; ghostLayer.innerHTML=""; particleLayer.innerHTML="";
+    state.zones.forEach(z=>{
+      z.pieces.forEach(p=>{
+        const d=pathD(z,p.points);
+        e("path",{d,class:"ghost-path"},ghostLayer);
+        const g=e("g",{class:"piece",tabindex:"0",role:"button","aria-label":`${z.name}纹线${p.id+1}`},pieceLayer);
+        e("path",{d,class:"piece-shadow"},g);
+        e("path",{d,class:"piece-line"},g);
+        e("path",{d,class:"piece-hit"},g);
+        bindPress(g,()=>handlePiece(z,p));
+        p.el=g;
+      });
+    });
+    updateAssist();
+  }
+
+  function activeCellMap(zone){
+    const map=new Map();
+    zone.pieces.forEach(p=>{
+      if(!p.active) return;
+      p.cells.forEach(c=>map.set(cellKey(c),p));
+    });
+    return map;
+  }
+  function checkMovable(zone,piece)
