@@ -1,0 +1,82 @@
+2px solid #d19b36;border-radius:22px;
+  background:radial-gradient(circle at 50% 18%,#26180c 0,#0d0a07 50%,#040403 100%);
+  box-shadow:0 0 0 7px rgba(98,60,14,.22),0 28px 100px rgba(0,0,0,.92)
+}
+.panel-card.compact{min-height:420px}
+.panel-seal{
+  width:88px;height:88px;margin:0 auto 18px;display:grid;place-items:center;border-radius:50%;
+  color:#f5cf69;background:#7b140d;border:3px solid #d4a03d;font-size:47px;box-shadow:0 0 30px rgba(214,55,35,.42)
+}
+.panel-card h2{margin:0 0 14px;font-size:clamp(30px,5vw,50px);letter-spacing:5px}
+.panel-card p{margin:0 auto 26px;max-width:560px;color:#d1a750;font:500 clamp(15px,2.7vw,24px)/1.7 "PingFang SC","Noto Sans SC",sans-serif}
+.panel-card button{
+  min-width:180px;padding:14px 25px;border:1px solid #d09b34;border-radius:14px;
+  color:#f3d58d;background:#171007;font-size:22px;font-weight:700;cursor:pointer
+}
+.panel-card button.primary{background:linear-gradient(#a52518,#671009);color:#ffe4a2}
+.modal-stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:20px 0 28px}
+.stat-pill{min-width:128px;padding:10px 14px;border:1px solid #845716;border-radius:12px;background:rgba(0,0,0,.35);font:600 17px/1.45 sans-serif}
+.modal-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:17px 5px;border-bottom:1px solid rgba(190,135,43,.24);font:600 21px sans-serif}
+.toggle{position:relative;min-width:64px!important;width:64px;height:36px!important;padding:3px!important;border-radius:20px!important;background:#392716!important}
+.toggle::after{content:"";display:block;width:28px;height:28px;border-radius:50%;background:#906421;transition:.2s}
+.toggle.on{background:#72150e!important}
+.toggle.on::after{transform:translateX(28px);background:#efbd55}
+.spark{fill:#f8d778;filter:url(#goldGlow);pointer-events:none}
+.skin-cool .piece-line{fill:none;stroke:url(#goldStroke);stroke-width:4.7;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrowGold);filter:url(#goldGlow)}
+.skin-cool .zone-name-plaque{fill:#4f1110}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+@keyframes hintPulse{from{opacity:.62}to{opacity:1}}
+@keyframes medallionPulse{from{opacity:.35}to{opacity:1}}
+@keyframes centerPulse{from{filter:drop-shadow(0 0 3px #b6771b)}to{filter:drop-shadow(0 0 20px #f4c85b)}}
+@media(max-aspect-ratio:9/16){#app{width:100vw;height:calc(100vw * 1672 / 941)}}
+@media(min-aspect-ratio:9/16){#app{height:100vh;width:calc(100vh * 941 / 1672)}}
+</style>
+</head>
+<body>
+<main id="app" aria-label="四象归真箭头解谜游戏">
+  <svg id="gameSvg" viewBox="0 0 941 1672" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <linearGradient id="goldStroke" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#fff0a7"/>
+        <stop offset=".18" stop-color="#d9a93a"/>
+        <stop offset=".5" stop-color="#f5cf6d"/>
+        <stop offset=".78" stop-color="#a56816"/>
+        <stop offset="1" stop-color="#f6d77e"/>
+      </linearGradient>
+      <radialGradient id="boardShade">
+        <stop offset="0" stop-color="#15110c" stop-opacity=".9"/>
+        <stop offset=".7" stop-color="#050504" stop-opacity=".97"/>
+        <stop offset="1" stop-color="#010101"/>
+      </radialGradient>
+      <filter id="goldGlow" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="3.1" result="b"/>
+        <feColorMatrix in="b" type="matrix" values="1 0 0 0 .72  0 1 0 0 .4  0 0 1 0 .03  0 0 0 .82 0"/>
+        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="redGlow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="5" result="r"/>
+        <feColorMatrix in="r" type="matrix" values="1 0 0 0 .8 0 0 0 0 .05 0 0 0 0 .01 0 0 0 1 0"/>
+        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="paperNoise">
+        <feTurbulence type="fractalNoise" baseFrequency=".86" numOctaves="2" seed="8"/>
+        <feColorMatrix type="saturate" values="0"/>
+        <feComponentTransfer><feFuncA type="table" tableValues="0 .055"/></feComponentTransfer>
+      </filter>
+      <marker id="arrowGold" markerWidth="14" markerHeight="14" refX="11.5" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M0,0 L12,7 L0,14 Z" fill="#efc35c" stroke="#65400e" stroke-width=".55"/>
+      </marker>
+      <marker id="arrowHint" markerWidth="14" markerHeight="14" refX="11.5" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+        <path d="M0,0 L12,7 L0,14 Z" fill="#fff4ad"/>
+      </marker>
+      <clipPath id="boardClip"><rect x="24" y="276" width="893" height="1068" rx="8"/></clipPath>
+    </defs>
+
+    <rect width="941" height="1672" fill="#030303"/><rect width="941" height="1672" filter="url(#paperNoise)" opacity=".55"/><g opacity=".14" fill="none" stroke="#b57c26" stroke-width="2"><path d="M0 230c58-60 131-36 145 10 60-38 135 8 118 66H0M941 228c-58-60-131-36-145 10-60-38-135 8-118 66h263"/><path d="M0 1450c70-72 148-47 164 15 72-42 150 10 135 78H0M941 1450c-70-72-148-47-164 15-72-42-150 10-135 78h299"/><circle cx="470.5" cy="811" r="420"/><circle cx="470.5" cy="811" r="350"/></g>
+    <rect x="18" y="268" width="905" height="1084" rx="8" fill="#020202" opacity=".68"/>
+    <rect x="22" y="274" width="897" height="1072" rx="8" fill="url(#boardShade)" fill-opacity=".82" stroke="#b17923" stroke-width="2.2"/>
+    <rect x="31" y="283" width="879" height="1054" rx="5" fill="none" stroke="#4e320f" stroke-width="1"/>
+    <rect x="18" y="268" width="905" height="1084" rx="8" filter="url(#paperNoise)" opacity=".5"/>
+
+    <rect x="270" y="0" width="671" height="2
