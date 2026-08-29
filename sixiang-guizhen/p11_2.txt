@@ -1,0 +1,4 @@
+e; modalText.textContent=text;
+    modalStats.innerHTML=stats.map(([k,v])=>`<div class="stat-pill"><div>${k}</div><strong>${v}</strong></div>`).join("");
+    modalActions.innerHTML="";
+    actions.for
