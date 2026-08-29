@@ -1,0 +1,44 @@
+}))};
+        const zr={...fake};
+        const map=new Map();
+        zr.pieces.forEach(q=>q.cells.forEach(c=>map.set(cellKey(c),q)));
+        const [dx,dy]=DIRS[p.dir];
+        const own=new Set(p.cells.map(cellKey));
+        let [x,y]=p.cells[p.cells.length-1]; x+=dx;y+=dy;
+        let movable=true;
+        while(x>=0&&x<z.gridW&&y>=0&&y<z.gridH){
+          const k=`${x},${y}`;
+          if(!own.has(k)&&(OBST.has(k)||map.has(k))){movable=false;break;}
+          x+=dx;y+=dy;
+        }
+        if(!movable){ok=false;break;}
+        active.delete(pid);
+      }
+    });
+    console.info(ok?"关卡验证通过：96条纹线完整可解":"关卡验证失败");
+  }
+
+  bindPress(document.getElementById("hintBtn"),hint);
+  bindPress(document.getElementById("clearBtn"),clearOne);
+  bindPress(document.getElementById("resetBtn"),()=>showPanel({
+    seal:"重",title:"重新布阵",text:"当前进度将被清空。",
+    actions:[{label:"继续游戏",onClick:hidePanel},{label:"确认重置",primary:true,onClick:()=>{hidePanel();resetGame();}}]
+  }));
+  bindPress(document.getElementById("restartTopBtn"),resetGame);
+  bindPress(document.getElementById("backBtn"),()=>showPanel({
+    seal:"留",title:"暂离此局",text:"当前试玩版只有这一关精品关卡。",
+    actions:[{label:"继续解印",primary:true,onClick:hidePanel}]
+  }));
+  bindPress(centerGroup,complete);
+  bindPress(document.getElementById("skinBtn"),()=>{
+    state.skin=state.skin==="warm"?"cool":"warm";safeSet("sixiangSkin",state.skin);updateAssist();toast("已切换金纹质感");
+  });
+  bindPress(document.getElementById("settingsBtn"),()=>settingsPanel.classList.remove("hidden"));
+  bindPress(document.getElementById("closeSettings"),()=>settingsPanel.classList.add("hidden"));
+
+  function syncToggles(){
+    document.getElementById("soundToggle").classList.toggle("on",state.sound);
+    document.getElementById("vibrationToggle").classList.toggle("on",state.vibration);
+    document.getElementById("assistToggle").classList.toggle("on",state.assist);
+  }
+  
