@@ -1,0 +1,15 @@
+{
+  "name": "四象归真",
+  "platform": "web-mobile",
+  "buildPath": "project://build/web-mobile",
+  "debug": false,
+  "md5Cache": false,
+  "startScene": "09dc4332-638e-4828-b232-b4d2a0363ad2",
+  "scenes": [
+    {
+      "url": "db://assets/scenes/Main.scene",
+      "uuid": "09dc4332-638e-4828-b232-b4d2a0363ad2"
+    }
+  ],
+  "packages": {}
+}
