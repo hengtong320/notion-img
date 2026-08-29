@@ -1,0 +1,2 @@
+ bindPress(document.getElementById("soundToggle"),()=>{state.sound=!state.sound;safeSet("sixiangSound",state.sound?"1":"0");syncToggles();});
+  bindPress(document.getElementById("vibrationToggle"),()=
