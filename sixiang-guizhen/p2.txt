@@ -1,0 +1,89 @@
+50" fill="#030303" opacity=".985"/>
+    <text id="levelNo" x="510" y="65" class="level-no" text-anchor="middle">关卡135</text>
+    <text id="levelTitle" x="510" y="111" class="level-title" text-anchor="middle">四象归真</text>
+    <g id="hearts"></g>
+    <text id="progressText" x="510" y="222" class="progress-text" text-anchor="middle">剩余纹线 96</text>
+    <g class="top-action-art">
+      <circle cx="792" cy="66" r="43" class="top-action-circle"/>
+      <text x="792" y="76" class="top-action-icon" text-anchor="middle">肤</text>
+      <circle cx="879" cy="66" r="43" class="top-action-circle"/>
+      <text x="879" y="76" class="top-action-icon" text-anchor="middle">设</text>
+    </g>
+
+    <g id="zoneFrames"></g>
+    <g id="ghostLayer" clip-path="url(#boardClip)" opacity=".13"></g>
+    <g id="pieceLayer" clip-path="url(#boardClip)"></g>
+    <g id="medallionLayer"></g>
+    <g id="sealLayer"></g>
+    <g id="particleLayer" clip-path="url(#boardClip)"></g>
+
+    <g id="centerGroup" class="center-group" role="button" tabindex="0" aria-label="中央归真">
+      <circle cx="470.5" cy="811" r="126" class="center-halo"/>
+      <circle cx="470.5" cy="811" r="112" class="center-ring"/>
+      <g aria-hidden="true"><circle cx="470.5" cy="811" r="86" fill="#050403" stroke="#d6a23b" stroke-width="3"/><g transform="translate(470.5 811)" fill="none" stroke="#d6a23b" stroke-width="5"><path d="M0-70A70 70 0 0 1 0 70A35 35 0 0 1 0 0A35 35 0 0 0 0-70Z" fill="#d6a23b"/><path d="M0 70A70 70 0 0 1 0-70A35 35 0 0 1 0 0A35 35 0 0 0 0 70Z" fill="#080604"/><circle cy="-35" r="8" fill="#080604" stroke="none"/><circle cy="35" r="8" fill="#d6a23b" stroke="none"/></g><g stroke="#d6a23b" stroke-width="5"><path d="M450.5 711h14m8 0h14"/><path d="M450.5 911h14m8 0h14"/><path d="M350.5 811h14m8 0h14"/><path d="M550.5 811h14m8 0h14"/><path d="M379.5 740h14m8 0h14"/><path d="M521.5 740h14m8 0h14"/><path d="M379.5 882h14m8 0h14"/><path d="M521.5 882h14m8 0h14"/></g></g>
+      <circle cx="470.5" cy="811" r="46" fill="#060504" stroke="#d39b31" stroke-width="3"/>
+      <text id="centerSealText" x="470.5" y="826" class="center-seal" text-anchor="middle">封</text>
+      <g id="centerDots"></g>
+    </g>
+
+    <g id="comboGroup" opacity="0">
+      <text id="comboText" x="470.5" y="1390" text-anchor="middle" class="combo-text">连解 ×2</text>
+    </g>
+
+    <rect x="0" y="1360" width="941" height="312" fill="#030303" opacity=".97"/>
+    <line x1="24" y1="1390" x2="917" y2="1390" class="footer-divider"/>
+    <g class="footer-art">
+      <circle cx="317" cy="1500" r="62" class="footer-circle"/>
+      <path d="M301 1485c0-19 30-25 37-8 4 10-2 17-8 23-4 4-5 9-5 15h-17c0-8-2-12-7-18-1-2 0-8 0-12zM309 1524h16M311 1532h12" class="footer-icon"/>
+      <text x="317" y="1602" class="footer-label" text-anchor="middle">提示</text>
+      <circle cx="470" cy="1500" r="62" class="footer-circle"/>
+      <path d="M492 1475a32 32 0 1 0 4 42M492 1475v25h-25" class="footer-icon"/>
+      <text x="470" y="1602" class="footer-label" text-anchor="middle">重置</text>
+      <circle cx="651" cy="1500" r="62" class="footer-circle"/>
+      <path d="M628 1520l42-42 18 18-42 42h-28zM664 1486l17 17" class="footer-icon"/>
+      <text x="651" y="1602" class="footer-label" text-anchor="middle">清除</text>
+    </g>
+    <g id="hintBtn" class="footer-hit" role="button" tabindex="0" aria-label="提示">
+      <circle cx="317" cy="1500" r="70" fill="transparent"/>
+      <circle cx="365" cy="1451" r="20" class="count-dot"/><text id="hintCount" x="365" y="1459" class="count-num" text-anchor="middle">3</text>
+    </g>
+    <g id="resetBtn" class="footer-hit" role="button" tabindex="0" aria-label="重置"><circle cx="470" cy="1500" r="70" fill="transparent"/></g>
+    <g id="clearBtn" class="footer-hit" role="button" tabindex="0" aria-label="清除">
+      <circle cx="651" cy="1500" r="70" fill="transparent"/>
+      <circle cx="700" cy="1451" r="20" class="count-dot"/><text id="clearCount" x="700" y="1459" class="count-num" text-anchor="middle">2</text>
+    </g>
+
+    <g id="skinBtn" class="header-hit" role="button" tabindex="0" aria-label="切换皮肤"><circle cx="792" cy="67" r="52" fill="transparent"/></g>
+    <g id="settingsBtn" class="header-hit" role="button" tabindex="0" aria-label="设置"><circle cx="879" cy="67" r="52" fill="transparent"/></g>
+    <g id="backBtn" class="header-hit" role="button" tabindex="0" aria-label="返回"><circle cx="70" cy="67" r="55" fill="transparent"/></g>
+    <g id="restartTopBtn" class="header-hit" role="button" tabindex="0" aria-label="重新开始"><circle cx="166" cy="67" r="55" fill="transparent"/></g>
+  </svg>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <div id="tutorial" class="overlay hidden">
+    <div class="panel-card tutorial-card">
+      <div class="panel-seal">诀</div>
+      <h2>箭头即飞出方向</h2>
+      <p>只有箭头前方没有其他纹线时，整根纹线才可抽离。错误点击会损失一颗心。</p>
+      <button id="tutorialStart" class="primary">开始解印</button>
+    </div>
+  </div>
+
+  <div id="modal" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="panel-card">
+      <div id="modalSeal" class="panel-seal">归</div>
+      <h2 id="modalTitle">四象归真</h2>
+      <p id="modalText"></p>
+      <div id="modalStats" class="modal-stats"></div>
+      <div id="modalActions" class="modal-actions"></div>
+    </div>
+  </div>
+
+  <div id="settingsPanel" class="overlay hidden">
+    <div class="panel-card compact">
+      <div class="panel-seal">设</div>
+      <h2>设置</h2>
+      <div class="setting-row"><span>音效</span><button id="soundToggle" class="toggle on" aria-label="音效开关"></button></div>
+      <div class="setting-row"><span>震动</span><button id="vibrationToggle" class="toggle on" aria-label="震动开关"></button></div>
+      <div class="setting-row"><span>辅助高亮</span><button id="assistToggle" class="toggle" aria-label="辅助高亮开关"></button></div>
