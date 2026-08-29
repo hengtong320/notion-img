@@ -1,0 +1,13 @@
+>{state.vibration=!state.vibration;safeSet("sixiangVibration",state.vibration?"1":"0");syncToggles();});
+  bindPress(document.getElementById("assistToggle"),()=>{state.assist=!state.assist;safeSet("sixiangAssist",state.assist?"1":"0");syncToggles();updateAssist();});
+
+  bindPress(document.getElementById("tutorialStart"),()=>{
+    tutorial.classList.add("hidden");safeSet("sixiangTutorial","1");toast("先寻找箭头前方完全畅通的纹线");
+  });
+
+  buildRuntime(); renderFrames(); renderPieces(); renderHearts(); updateHud(); syncToggles(); validate();
+  if(safeGet("sixiangTutorial","0")!=="1") tutorial.classList.remove("hidden");
+  else toast("四象封印已布下");
+})();</script>
+</body>
+</html>
