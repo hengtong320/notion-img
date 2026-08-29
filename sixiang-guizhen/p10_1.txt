@@ -1,0 +1,49 @@
+{
+    const [dx,dy]=DIRS[piece.dir];
+    const map=activeCellMap(zone);
+    const own=new Set(piece.cells.map(cellKey));
+    let [x,y]=piece.cells[piece.cells.length-1];
+    x+=dx; y+=dy;
+    while(x>=0&&x<zone.gridW&&y>=0&&y<zone.gridH){
+      const k=`${x},${y}`;
+      if(!own.has(k)){
+        if(OBST.has(k)) return {ok:false,kind:"seal"};
+        const blocker=map.get(k);
+        if(blocker && blocker.active) return {ok:false,kind:"piece",blocker};
+      }
+      x+=dx; y+=dy;
+    }
+    return {ok:true};
+  }
+  function movablePieces(){
+    const list=[];
+    state.zones.forEach(z=>z.pieces.forEach(p=>{
+      if(p.active && checkMovable(z,p).ok) list.push({zone:z,piece:p});
+    }));
+    return list;
+  }
+  function remainingCount(){
+    return state.zones.reduce((n,z)=>n+z.pieces.filter(p=>p.active).length,0);
+  }
+  function updateHud(){
+    renderHearts();
+    document.getElementById("hintCount").textContent=state.hints;
+    document.getElementById("clearCount").textContent=state.clears;
+    progressText.textContent=`剩余纹线 ${remainingCount()} · 已归位 ${state.zones.filter(z=>z.completed).length}/4`;
+    state.zones.forEach(z=>{
+      const remain=z.pieces.filter(p=>p.active).length;
+      if(z.progress) z.progress.textContent=z.completed?`${z.name} · 已归位`:`${z.name} · ${remain}`;
+    });
+    updateAssist();
+  }
+  function updateAssist(){
+    document.getElementById("app").classList.toggle("skin-cool",state.skin==="cool");
+    state.zones.forEach(z=>z.pieces.forEach(p=>p.el?.classList.remove("assist-ready")));
+    if(!state.assist) return;
+    movablePieces().forEach(({piece})=>piece.el?.classList.add("assist-ready"));
+  }
+  function spawnSparks(zone,piece){
+    const [hx,hy]=pxy(zone,piece.points[piece.points.length-1]);
+    for(let i=0;i<13;i++){
+      const c=e("circle",{cx:hx,cy:hy,r:1.5+Math.random()*2.4,class:"spark"},particleLayer);
+      const a=Math.random()*Math
