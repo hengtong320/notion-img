@@ -1,0 +1,57 @@
+Hud();
+    state.busy=false;
+  }
+
+  function wrongPiece(zone,piece,result){
+    if(state.busy) return;
+    state.lives--; state.mistakes++;
+    sound("bad"); vibrate([45,35,45]);
+    piece.el.classList.remove("blocked");
+    void piece.el.getBBox();
+    piece.el.classList.add("blocked");
+    setTimeout(()=>piece.el.classList.remove("blocked"),380);
+    if(result.kind==="piece"&&result.blocker?.el){
+      result.blocker.el.classList.add("blocker");
+      setTimeout(()=>result.blocker.el.classList.remove("blocker"),600);
+      toast("前方被另一根纹线挡住");
+    }else{
+      zone.medallion.classList.add("blocker");
+      setTimeout(()=>zone.medallion.classList.remove("blocker"),600);
+      toast("前方被兽印挡住");
+    }
+    updateHud();
+    if(state.lives<=0) setTimeout(showFail,420);
+  }
+
+  function handlePiece(zone,piece){
+    if(state.busy||!piece.active) return;
+    const result=checkMovable(zone,piece);
+    if(result.ok) removePiece(zone,piece);
+    else wrongPiece(zone,piece,result);
+  }
+
+  function hint(){
+    if(state.busy) return;
+    if(state.hints<=0){toast("提示次数已用完");return;}
+    const list=movablePieces();
+    if(!list.length){toast("当前没有可解纹线");return;}
+    state.hints--;
+    const pick=list[Math.floor(Math.random()*list.length)];
+    pick.piece.el.classList.add("hint");
+    sound("hint"); vibrate(14); toast(`观察${pick.zone.name}区域的高亮纹线`);
+    setTimeout(()=>pick.piece.el?.classList.remove("hint"),1900);
+    updateHud();
+  }
+  function clearOne(){
+    if(state.busy) return;
+    if(state.clears<=0){toast("清除次数已用完");return;}
+    const list=movablePieces();
+    if(!list.length){toast("当前没有可清除纹线");return;}
+    state.clears--;
+    const pick=list.sort((a,b)=>b.piece.order-a.piece.order)[0];
+    removePiece(pick.zone,pick.piece,true);
+    updateHud();
+  }
+
+  function showPanel({seal="归",title,text="",stats=[],actions=[]}){
+    modalSeal.textContent=seal; modalTitle.textContent=titl
