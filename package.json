@@ -1,0 +1,15 @@
+{
+  "name": "sixiang-guizhen-cocos",
+  "type": "3d",
+  "uuid": "8e2c4f7b-6f6e-4e4c-9d86-8f2a03f7f835",
+  "creator": {
+    "version": "3.8.8",
+    "registry": {"remote": {}},
+    "dependencies": {}
+  },
+  "version": "1.0.0",
+  "scripts": {
+    "verify:levels": "node tools/verify-levels.mjs",
+    "test": "node tools/verify-levels.mjs"
+  }
+}
