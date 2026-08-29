@@ -1,0 +1,94 @@
+.setAttribute(k,String(v));
+    }
+    if(parent) parent.appendChild(n);
+    return n;
+  }
+  function bindPress(node, fn){
+    node.addEventListener("pointerdown", ev => { ev.preventDefault(); fn(ev); }, {passive:false});
+    node.addEventListener("keydown", ev => {
+      if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); fn(ev); }
+    });
+  }
+  function toast(msg, ms=1250){
+    clearTimeout(state.toastTimer);
+    toastEl.textContent=msg;
+    toastEl.classList.add("show");
+    state.toastTimer=setTimeout(()=>toastEl.classList.remove("show"),ms);
+  }
+  function vibrate(pattern=22){
+    if(state.vibration && navigator.vibrate) navigator.vibrate(pattern);
+  }
+  function sound(kind="ok"){
+    if(!state.sound) return;
+    try{
+      state.audio ||= new (window.AudioContext||window.webkitAudioContext)();
+      const ctx=state.audio, now=ctx.currentTime;
+      if(ctx.state==="suspended") ctx.resume();
+      const master=ctx.createGain(); master.connect(ctx.destination);
+      master.gain.setValueAtTime(.0001,now);
+      const dur=kind==="win"?.95:kind==="bad"?.22:kind==="unlock"?.55:.28;
+      master.gain.exponentialRampToValueAtTime(kind==="bad"?.055:.105,now+.012);
+      master.gain.exponentialRampToValueAtTime(.0001,now+dur);
+      const notes = kind==="bad" ? [116] :
+                    kind==="unlock" ? [392,523,659] :
+                    kind==="win" ? [330,392,523,659] :
+                    kind==="hint" ? [523,659] : [330,440];
+      notes.forEach((freq,i)=>{
+        const o=ctx.createOscillator();
+        o.type=kind==="bad"?"square":"sine";
+        o.frequency.setValueAtTime(freq,now+i*.075);
+        const g=ctx.createGain(); g.gain.value=1/(i+1);
+        o.connect(g); g.connect(master);
+        o.start(now+i*.075); o.stop(now+dur+i*.075);
+      });
+    }catch(_){}
+  }
+  function heartPath(cx,cy,s=.55){
+    return `M ${cx} ${cy+12*s} C ${cx-34*s} ${cy-12*s}, ${cx-30*s} ${cy-43*s}, ${cx-7*s} ${cy-46*s} C ${cx+5*s} ${cy-48*s}, ${cx+14*s} ${cy-39*s}, ${cx} ${cy-26*s} C ${cx+14*s} ${cy-39*s}, ${cx+24*s} ${cy-48*s}, ${cx+37*s} ${cy-43*s} C ${cx+60*s} ${cy-38*s}, ${cx+64*s} ${cy-8*s}, ${cx} ${cy+44*s} Z`;
+  }
+  function renderHearts(){
+    heartsEl.innerHTML="";
+    [0,1,2].forEach(i=>e("text",{x:430+i*68,y:190,class:`heart-text ${i>=state.lives?"empty":""}`,"text-anchor":"middle",text:"♥"},heartsEl));
+  }
+  function zoneGeom(zone){
+    const {x,y,w,h}=zone.layout;
+    const cell=Math.min(w/zone.gridW,h/zone.gridH);
+    const ox=x+(w-cell*zone.gridW)/2;
+    const oy=y+(h-cell*zone.gridH)/2;
+    return {cell,ox,oy};
+  }
+  function pxy(zone, p){
+    const g=zoneGeom(zone);
+    return [g.ox+(p[0]+.5)*g.cell,g.oy+(p[1]+.5)*g.cell];
+  }
+  function pathD(zone, points){
+    return points.map((p,i)=>`${i?"L":"M"} ${pxy(zone,p).join(" ")}`).join(" ");
+  }
+  function cellKey(c){ return `${c[0]},${c[1]}`; }
+
+  function buildRuntime(){
+    state.zones=level.zones.map((z,zi)=>({
+      ...z, index:zi, completed:false, medallion:null, progress:null, seal:null,
+      pieces:z.pieces.map(p=>({...p,active:true,el:null}))
+    }));
+    state.lives=3; state.hints=3; state.clears=2; state.moves=0; state.mistakes=0;
+    state.combo=0; state.lastCorrectAt=0; state.startedAt=performance.now();
+    state.busy=false; state.centerReady=false; state.history=[];
+  }
+
+  function renderFrames(){
+    frameLayer.innerHTML=""; medallionLayer.innerHTML=""; sealLayer.innerHTML=""; centerDots.innerHTML="";
+    const namesPos=[
+      {x:57,y:535,w:57,h:113},
+      {x:827,y:535,w:57,h:113},
+      {x:57,y:1080,w:57,h:113},
+      {x:827,y:1080,w:57,h:113},
+    ];
+    state.zones.forEach((z,i)=>{
+      const {x,y,w,h}=z.layout;
+      e("rect",{x,y,width:w,height:h,rx:3,class:"zone-frame"},frameLayer);
+      e("rect",{x:x+7,y:y+7,width:w-14,height:h-14,rx:2,class:"zone-frame-inner"},frameLayer);
+
+      const plaque=namesPos[i];
+      e("rect",{x:plaque.x,y:plaque.y,width:plaque.w,height:plaque.h,rx:12,class:"zone-name-plaque"},sealLayer);
+      const tx=plaque.x+plaqu
