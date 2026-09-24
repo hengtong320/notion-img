@@ -16,13 +16,39 @@ jobs:
       - name: Checkout capture package
         uses: actions/checkout@v4
 
-      - name: Prepare site
+      - name: Prepare layered site and assets
         run: |
           rm -rf /tmp/pinchu-site
-          mkdir -p /tmp/pinchu-site
-          unzip -q figma-capture/site.zip -d /tmp/pinchu-site
-          curl -fsSL https://raw.githubusercontent.com/F1rstDan/html2figma/main/source/figma_html-to-design_capture.js -o /tmp/figma-capture.js
+          mkdir -p /tmp/pinchu-site/assets
+          cp figma-capture/site/index.html /tmp/pinchu-site/index.html
+          cp figma-capture/site/components.html /tmp/pinchu-site/components.html
+          cp figma-capture/site/spec.html /tmp/pinchu-site/spec.html
+          sed -i 's/\.webp/.png/g' /tmp/pinchu-site/index.html /tmp/pinchu-site/components.html /tmp/pinchu-site/spec.html
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/w7Q0tWKoFtG3d8BA -o /tmp/pinchu-site/assets/background.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/d6c4GNcFPrgKSaK0 -o /tmp/pinchu-site/assets/board_frame.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/PAW14yFlm3BtibuF -o /tmp/pinchu-site/assets/piece_01.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/jxlJzw5ng9TnRb6T -o /tmp/pinchu-site/assets/piece_02.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/DpAgfb4atLc9LUac -o /tmp/pinchu-site/assets/piece_03.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/UU2raMQCG0djsOx2 -o /tmp/pinchu-site/assets/piece_04.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/UR7UC8x2lgvRBnCg -o /tmp/pinchu-site/assets/piece_05.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/iSNcUBAQ2Lq8xAnJ -o /tmp/pinchu-site/assets/piece_06.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/lBN5dDTM0ugv9ixg -o /tmp/pinchu-site/assets/piece_07.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/Oui18I9Qqisu4pSt -o /tmp/pinchu-site/assets/piece_08.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/u7uWz6S6aCG0cIlp -o /tmp/pinchu-site/assets/mascot_cat.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/KWCapOZXKdCiHZ0T -o /tmp/pinchu-site/assets/progress_plate.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/SCK6lbtNBLNcoR8V -o /tmp/pinchu-site/assets/brand_logo.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/BTRBgwDykOn7ZVtP -o /tmp/pinchu-site/assets/avatar.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/ZjDzAmIve4fkh2UH -o /tmp/pinchu-site/assets/currency_flower.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/dl3S3F7ctiG7Ltxj -o /tmp/pinchu-site/assets/icon_rank.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/HllzZjTNyfV4i5vx -o /tmp/pinchu-site/assets/icon_circle.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/rxgJmJctO2QewNcf -o /tmp/pinchu-site/assets/icon_daily.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/bGnlGAkb0aUlPuPe -o /tmp/pinchu-site/assets/icon_album.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/TZwcMvKIKIUlpgo4 -o /tmp/pinchu-site/assets/button_skin.png
+          curl -fsSL --retry 3 --retry-all-errors https://at.adobe.com/Ezmn9JCrguBJqvF2 -o /tmp/pinchu-site/original.png
+          curl -fsSL --retry 3 --retry-all-errors https://raw.githubusercontent.com/F1rstDan/html2figma/main/source/figma_html-to-design_capture.js -o /tmp/figma-capture.js
           test -s /tmp/figma-capture.js
+          test -s /tmp/pinchu-site/assets/mascot_cat.png
+          file /tmp/pinchu-site/assets/*.png /tmp/pinchu-site/original.png | head -30
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -47,6 +73,7 @@ jobs:
 
       - name: Capture three editable Figma pages
         working-directory: figma-capture
-        env:
-          CHROME_PATH: /usr/bin/google-chrome
-        run: node run-capture.cjs
+        run: |
+          CHROME_PATH="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
+          test -n "$CHROME_PATH"
+          CHROME_PATH="$CHROME_PATH" node run-capture.cjs

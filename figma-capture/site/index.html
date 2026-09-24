@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=426, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>拼出花来｜首页高保真</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#eaf5ff;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif}
+  body{display:flex;align-items:flex-start;justify-content:flex-start}
+  #screen{position:relative;width:426px;height:923px;overflow:hidden;background:#cdeaff;isolation:isolate}
+  #stage{position:absolute;left:0;top:0;width:852px;height:1846px;transform:scale(.5);transform-origin:0 0}
+  .abs{position:absolute;display:block}
+  .no-drag{user-select:none;-webkit-user-drag:none}
+  .text{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap}
+  .shadow-soft{filter:drop-shadow(0 8px 14px rgba(35,70,84,.18))}
+  .side-wrap{position:absolute;width:115px;height:136px}
+  .side-bg{position:absolute;left:4px;top:16px;width:106px;height:106px;border-radius:26px;background:rgba(96,113,123,.35);box-shadow:0 8px 18px rgba(29,48,62,.12)}
+  .side-label{position:absolute;left:0;bottom:0;width:115px;height:48px;border-radius:23px;background:rgba(66,76,85,.88);color:#fff9ee;font-size:22px;font-weight:700;line-height:48px;text-align:center;letter-spacing:.2px}
+  .resource-bar{position:absolute;left:155px;top:78px;width:227px;height:58px;border-radius:30px;background:rgba(53,78,101,.79);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+  .plus{position:absolute;left:330px;top:82px;width:45px;height:45px;border-radius:50%;background:#60798c;border:2px solid #9aafbf;box-shadow:0 3px 8px rgba(31,57,74,.22)}
+  .plus:before,.plus:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;border-radius:2px}
+  .plus:before{width:23px;height:4px}.plus:after{width:4px;height:23px}
+  .wechat{position:absolute;left:610px;top:29px;width:213px;height:65px;border-radius:33px;background:rgba(52,73,94,.86);box-shadow:0 5px 12px rgba(31,57,74,.18)}
+  .wechat .dot{position:absolute;top:24px;width:9px;height:9px;border-radius:50%;background:#fff}.wechat .d1{left:30px}.wechat .d2{left:47px;width:12px;height:12px;top:22px}.wechat .d3{left:67px}.wechat .divider{position:absolute;left:122px;top:14px;width:2px;height:37px;background:rgba(208,216,224,.72)}
+  .wechat .ring{position:absolute;left:152px;top:15px;width:34px;height:34px;border:5px solid #fff;border-radius:50%}.wechat .ring:after{content:"";position:absolute;left:6px;top:6px;width:12px;height:12px;border-radius:50%;background:#fff}
+  .progress-text{position:absolute;left:351px;top:1326px;width:144px;height:53px;color:#fff9ee;font-size:48px;font-weight:700;line-height:53px;text-align:center;text-shadow:0 2px 3px rgba(75,42,18,.45)}
+  .primary-button{position:absolute;left:166px;top:1465px;width:524px;height:195px}
+  .primary-button .face{position:absolute;left:19px;top:30px;width:483px;height:128px;border-radius:64px;background:linear-gradient(180deg,#31c65a 0%,#0ba644 52%,#078d39 100%);box-shadow:inset 0 7px 0 rgba(255,255,255,.28),inset 0 -12px 0 rgba(0,78,36,.22),0 13px 18px rgba(63,78,37,.24)}
+  .play-shadow,.play{position:absolute;width:62px;height:74px;clip-path:polygon(8% 3%,95% 50%,8% 97%);border-radius:12px}
+  .play-shadow{left:113px;top:45px;background:#456332;opacity:.8;transform:translate(3px,4px)}
+  .play{left:110px;top:41px;background:#fff9e5;filter:drop-shadow(0 2px 0 #ebcb94)}
+  .button-label{position:absolute;left:191px;top:36px;width:241px;height:88px;color:#fffcee;font-size:60px;font-weight:700;line-height:88px;text-align:center;text-shadow:0 4px 0 rgba(0,79,38,.26)}
+  .footer{position:absolute;left:204px;top:1663px;width:453px;height:39px;color:#8a5e3d;font-size:25px;line-height:39px;text-align:center;letter-spacing:2px}
+  .slot-underlay{position:absolute;left:30px;top:600px;width:790px;height:815px}
+  .slot-svg{width:100%;height:100%}
+  .asset-note{position:absolute;left:590px;top:1070px;width:150px;height:100px;transform:rotate(-9deg);font-size:24px;color:#2d2d2d;line-height:1.25;text-align:center;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div id="screen" aria-label="拼出花来首页高保真原型">
+  <div id="stage">
+    <img class="abs no-drag" src="assets/background.webp" style="left:0;top:0;width:852px;height:1846px" alt="背景" />
+    <svg class="slot-underlay" viewBox="0 0 790 815" aria-label="8个程序化拼图槽位"><g fill="#F7E8D1"><path d="M207 187 C221 141 237 93 260 74 C291 49 333 45 394 47 L394 125 C394 137 400 143 410 138 C425 131 436 146 433 161 C431 176 417 188 405 184 C396 180 394 188 394 202 L394 412 L263 412 L263 357 C263 343 250 335 237 341 C224 348 212 350 200 339 C187 327 186 309 199 294 C210 282 222 279 238 288 C251 295 263 285 253 270 L207 187 Z"/><path d="M394 47 C432 47 458 47 482 53 C514 59 532 75 543 99 L586 187 L532 274 C524 289 532 301 547 296 C561 288 575 300 580 311 C587 327 579 343 565 347 C555 351 546 345 541 341 C532 338 527 345 527 359 L527 412 L394 412 L394 202 C394 188 396 180 405 184 C417 188 431 176 433 161 C436 146 425 131 410 138 C400 143 394 137 394 125 L394 47 Z"/><path d="M207 187 L164 187 C134 186 113 198 99 218 L27 332 C8 360 9 382 33 412 L263 412 L263 357 C263 343 250 335 237 341 C224 348 212 350 200 339 C187 327 186 309 199 294 C210 282 222 279 238 288 C251 295 263 285 253 270 L207 187 Z"/><path d="M586 187 L619 187 C639 187 658 198 670 218 L739 342 C750 366 743 390 727 412 L645 412 C635 412 629 418 635 430 C642 443 637 455 620 456 C605 455 597 442 604 427 C610 416 607 412 595 412 L527 412 L527 359 C527 345 532 338 541 341 C546 345 555 351 565 347 C579 343 587 327 580 311 C575 300 561 288 547 296 C532 301 524 289 532 274 L586 187 Z"/><path d="M33 412 C51 433 41 450 28 465 C11 489 9 510 25 537 L93 620 C104 634 118 643 143 644 L212 644 L264 577 C267 568 270 552 252 549 C244 548 235 556 225 552 C212 547 204 530 212 510 C217 496 228 489 245 497 C257 502 263 495 263 482 L263 412 L33 412 Z"/><path d="M263 412 L394 412 L394 753 L303 753 C276 754 259 744 245 714 L212 644 L264 577 C267 568 270 552 252 549 C244 548 235 556 225 552 C212 547 204 530 212 510 C217 496 228 489 245 497 C257 502 263 495 263 482 L263 412 Z"/><path d="M394 412 L527 412 L527 481 C527 492 535 501 548 497 C565 489 575 505 575 521 C575 541 565 557 549 551 C535 545 527 554 527 568 C527 580 546 609 569 644 L536 711 C525 735 513 749 491 753 L394 753 Z"/><path d="M527 412 L595 412 C607 412 610 416 604 427 C597 442 605 455 620 456 C637 455 642 443 635 430 C629 418 635 412 645 412 L727 412 C714 432 714 435 737 470 C749 492 748 514 734 533 L670 619 C658 634 649 644 620 644 L569 644 C546 609 527 580 527 568 C527 554 535 545 549 551 C565 557 575 541 575 521 C575 505 565 489 548 497 C535 501 527 492 527 481 L527 412 Z"/></g></svg>
+    <img class="abs no-drag" src="assets/piece_01.webp" style="left:217px;top:644px;width:249px;height:370px" alt="拼图块01" />
+    <img class="abs no-drag" src="assets/piece_02.webp" style="left:422px;top:645px;width:196px;height:369px" alt="拼图块02" />
+    <img class="abs no-drag" src="assets/piece_03.webp" style="left:41px;top:784px;width:254px;height:230px" alt="拼图块03" />
+    <img class="abs no-drag" src="assets/piece_04.webp" style="left:555px;top:785px;width:222px;height:273px" alt="拼图块04" />
+    <img class="abs no-drag" src="assets/piece_05.webp" style="left:42px;top:1010px;width:257px;height:236px" alt="拼图块05" />
+    <img class="abs no-drag" src="assets/piece_06.webp" style="left:236px;top:1010px;width:190px;height:346px" alt="拼图块06" />
+    <img class="abs no-drag" src="assets/piece_07.webp" style="left:422px;top:1010px;width:185px;height:345px" alt="拼图块07" />
+    <img class="abs no-drag" src="assets/piece_08.webp" style="left:555px;top:1010px;width:223px;height:236px" alt="拼图槽位08" />
+    <img class="abs no-drag" src="assets/board_frame.webp" style="left:21px;top:611px;width:792px;height:801px" alt="拼图金色外框" />
+    <img class="abs no-drag" src="assets/mascot_cat.webp" style="left:212px;top:357px;width:387px;height:392px" alt="吉祥物小猫" />
+    <img class="abs no-drag" src="assets/progress_plate.webp" style="left:321px;top:1314px;width:205px;height:72px" alt="进度底座" />
+    <div class="progress-text">7/8</div>
+    <img class="abs no-drag" src="assets/brand_logo.webp" style="left:202px;top:145px;width:428px;height:185px" alt="拼出花来品牌标志" />
+    <div class="resource-bar"></div><img class="abs no-drag" src="assets/avatar.webp" style="left:30px;top:54px;width:101px;height:102px" alt="头像" /><img class="abs no-drag" src="assets/currency_flower.webp" style="left:155px;top:73px;width:68px;height:64px" alt="花朵货币" /><div class="text" style="left:236px;top:78px;width:77px;height:55px;color:#fff9ee;font-size:38px;font-weight:700">128</div><div class="plus"></div><div class="wechat"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="divider"></span><span class="ring"></span></div>
+    <div class="side-wrap" style="left:30px;top:352px"><div class="side-bg"></div><img class="abs no-drag" src="assets/icon_rank.webp" style="left:3px;top:0;width:105px;height:95px" alt="排行榜图标"><div class="side-label">排行榜</div></div>
+    <div class="side-wrap" style="left:30px;top:508px"><div class="side-bg"></div><img class="abs no-drag" src="assets/icon_circle.webp" style="left:7px;top:0;width:109px;height:100px" alt="游戏圈图标"><div class="side-label">游戏圈</div></div>
+    <div class="side-wrap" style="left:703px;top:346px"><div class="side-bg"></div><img class="abs no-drag" src="assets/icon_daily.webp" style="left:2px;top:0;width:104px;height:102px" alt="每日挑战图标"><div class="side-label">每日挑战</div></div>
+    <div class="side-wrap" style="left:703px;top:511px"><div class="side-bg"></div><img class="abs no-drag" src="assets/icon_album.webp" style="left:1px;top:0;width:108px;height:108px" alt="画册图标"><div class="side-label">画册</div></div>
+    <div class="primary-button" role="button" aria-label="第8关"><img class="abs no-drag" src="assets/button_skin.webp" style="left:0;top:0;width:524px;height:195px" alt="主按钮底图" /><div class="face"></div><div class="play-shadow"></div><div class="play"></div><div class="button-label">第 8 关</div></div>
+    <div class="footer">—&nbsp;&nbsp;每一片 都是更好的自己&nbsp;&nbsp;—</div>
+  </div>
+</div>
+</body>
+</html>
