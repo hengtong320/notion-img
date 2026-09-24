@@ -1,0 +1,52 @@
+name: Capture Pinchu Hualai to Figma
+
+on:
+  push:
+    branches:
+      - figma-capture-pinchu-20260924
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout capture package
+        uses: actions/checkout@v4
+
+      - name: Prepare site
+        run: |
+          rm -rf /tmp/pinchu-site
+          mkdir -p /tmp/pinchu-site
+          unzip -q figma-capture/site.zip -d /tmp/pinchu-site
+          curl -fsSL https://raw.githubusercontent.com/F1rstDan/html2figma/main/source/figma_html-to-design_capture.js -o /tmp/figma-capture.js
+          test -s /tmp/figma-capture.js
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install browser controller
+        working-directory: figma-capture
+        run: |
+          npm init -y
+          npm install puppeteer-core@24.16.0 --no-audit --no-fund
+
+      - name: Start local site
+        run: |
+          python3 -m http.server 3000 --bind 127.0.0.1 --directory /tmp/pinchu-site >/tmp/pinchu-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:3000/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/pinchu-http.log
+          exit 1
+
+      - name: Capture three editable Figma pages
+        working-directory: figma-capture
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node run-capture.cjs
